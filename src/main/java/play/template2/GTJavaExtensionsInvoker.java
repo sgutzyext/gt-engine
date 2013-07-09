@@ -191,24 +191,8 @@ public abstract class GTJavaExtensionsInvoker {
             }
             
             // if object is a class then Groovy won't find the static methods for us.
-            // we must try to create an instance of the class and find the method that way.
-            
-            if ( object instanceof Class ) {
-                // try to create an instance of the class
-                try {
-                    Object instance = ((Class)object).newInstance();
-                    mm = InvokerHelper.getMetaClass(instance).pickMethod(methodName, argsTypes);
-                    if ( mm != null ) {
-                        // found it
-                        return new WrappedGroovyMetaMethod(mm);
-                    }
-                } catch (Exception e) {
-                    // Give up without logging anything
-                } 
-            }
-
-            // As a last resort, try to find the method without using groovy
-            Method m = MethodUtils.getMatchingAccessibleMethod(object.getClass(), methodName, argsTypes);
+            Class clazz = object instanceof Class ? (Class)object : object.getClass();
+            Method m = MethodUtils.getMatchingAccessibleMethod(clazz, methodName, argsTypes);
             if ( m != null) {
                 // found it
                 return new WrappedJavaMethod(m);

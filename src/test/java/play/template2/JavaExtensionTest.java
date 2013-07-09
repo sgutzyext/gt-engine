@@ -91,6 +91,15 @@ public class JavaExtensionTest {
 
     }
 
+    @Test
+    public void testStaticNameClashProblemRound() throws Exception {
+        TemplateSourceRenderer sr = createSourceRenderer();
+
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("a", 1.2f);
+        assertThat(sr.renderSrc("${Math.round(a)}", args)).isEqualTo("1");
+    }
+
     public static class Foo1 {
         public String inner;
     }
@@ -148,6 +157,10 @@ class SimpleJavaExtensions {
 
     public static String methodNameThatCanCollideWithGroovyObjectSupport() {
         return "";
+    }
+
+    public static int round(int num) {
+        return num;
     }
 }
 
